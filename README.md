@@ -1,8 +1,5 @@
-Here’s a revised version of your README file with a fresh structure and flow, while maintaining the technical content:
 
----
-
-# Distributed Video Transcoding System
+# Serverless Distributed Video Transcoding System
 
 This project implements a robust, distributed video transcoding system using **Node.js**, **AWS services**, **Redis**, and **ffmpeg**. By utilizing a leaky bucket rate-limiting algorithm, it efficiently converts uploaded videos into multiple resolutions, enhancing accessibility and offering optimized viewing experiences for users. The system supports automated transcoding for multiple video qualities and allows users to preview and download files in different resolutions.
 
@@ -17,19 +14,15 @@ This project implements a robust, distributed video transcoding system using **N
 - **Webhook Notifications**: Sends real-time notifications upon task completion or failure using webhook calls.
 
 ---
-
-## 📽️ Demo
-
-Watch a quick [demo video](https://github.com/AbhishekCS3459/Video-Transcoder-Service/assets/108479463/24dbc9ac-709c-46a6-8eae-3713b41fd0e1) showcasing the video transcoding system in action.
-
 ---
 
 ## 🏗️ System Architecture
+![Video Transcoder Service System Design](https://github.com/user-attachments/assets/14cbd7d1-3a13-4f71-a768-37f2d6d380e9)
 
-This system is built using a serverless and containerized architecture for seamless scalability. The design involves several core components:
+ This system uses a serverless and containerized architecture for seamless scalability. The design involves several core components:
 
 - **Frontend (Next.js)**: Enables video upload, previews, and download functionality.
-- **Backend (Node.js + Express)**: Manages video transcoding, queues, and handles RESTful APIs for rate-limited jobs.
+- **Backend (Node.js + Express)**: Manages video transcoding, and queues, and handles RESTful APIs for rate-limited jobs.
 - **AWS S3**: Secure storage for video files.
 - **Redis**: Queue management for video transcoding tasks.
 - **AWS ECS & Docker**: Video transcoding containers running on ECS clusters.
@@ -167,5 +160,3 @@ Contributions are always welcome! Feel free to open an issue or submit a pull re
 This project is licensed under the [MIT License](LICENSE).
 
 ---
-
-Feel free to adjust anything further as per your preference or project updates.
