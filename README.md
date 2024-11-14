@@ -103,11 +103,63 @@ The project is divided into several components:
 
 ### Step-by-Step Process:
 
-1. **Upload Video**: Users upload videos through the frontend interface.
-2. **Trigger Transcoding**: A Lambda function is triggered upon video upload (via S3 event). This function queues the transcoding job in Redis.
-3. **ECS Transcoding**: Docker containers managed by ECS pick up the jobs from Redis, transcode the videos, and save the output to S3.
-4. **Webhook & Notifications**: Once the transcoding is done, the system sends webhook notifications (success/failure).
-5. **Preview & Download**: Users can preview or download transcoded files in multiple resolutions via the frontend.
+### **System Flow Breakdown**
+1. **Client Interaction**
+   - The **client** requests a signed URL from the server (likely powered by a Node.js backend).
+   - The server generates and returns a **signed URL** for an S3 bucket. This URL allows the client to upload the video securely.
+
+2. **Video Upload**
+   - The **client uploads the raw video** to an **S3 bucket** using the signed URL.
+   - This upload event **triggers a Lambda function**.
+
+3. **Lambda Function**
+   - The Lambda function extracts **video metadata** (e.g., file name, format, size).
+   - It sends this metadata to the server for further processing.
+
+4. **Redis Queue Management**
+   - The server uses **Redis** as a temporary storage for the metadata (or jobs).
+   - If the number of jobs reaches a specific threshold (e.g., 5), the metadata is pushed to a **Job Queue** (e.g., an SQS queue or Redis-based queue).
+   - If there are fewer than 5 jobs, the job is passed directly to a **Consumer** for processing.
+
+5. **Consumer**
+   - The consumer fetches the job from the queue and processes it.
+   - It downloads the raw video from the **temporary S3 bucket**.
+
+6. **Video Transcoding (AWS ECS)**
+   - The consumer interacts with **AWS ECS** (Elastic Container Service), where Docker containers running **FFmpeg** perform the actual video transcoding.
+   - The video is transcoded into multiple resolutions (e.g., 360p, 480p, 720p).
+
+7. **Uploading Transcoded Videos**
+   - Once transcoding is complete, the transcoded video files are uploaded to a **final S3 bucket**.
+   - These files are organized for the client to download.
+
+8. **Client Fetches Transcoded Videos**
+   - The client can now download the transcoded videos from the **final S3 bucket**.
+
+---
+
+### **Key Components**
+1. **AWS S3**: Used for temporary and final storage of video files.
+2. **AWS Lambda**: Serverless compute that processes video metadata upon S3 events.
+3. **Redis**: Acts as a job scheduler and buffer for handling metadata efficiently.
+4. **Job Queue**: Ensures proper load management for video transcoding jobs.
+5. **AWS ECS with FFmpeg**: Highly scalable containerized service for video transcoding.
+6. **Signed URLs**: Provide secure, temporary access to upload and download files.
+
+---
+
+### **Why Serverless?**
+- **Scalability**: Serverless components like Lambda and S3 handle dynamic workloads.
+- **Cost Efficiency**: Resources (e.g., ECS, Lambda) only run when required.
+- **Modularity**: Each component (uploading, metadata processing, transcoding) is independently scalable.
+
+---
+
+### **Strengths of this Design**
+1. **Efficient Resource Utilization**: The consumer and ECS only work when enough jobs are queued.
+2. **Scalable Transcoding**: ECS allows scaling FFmpeg containers for high-resolution videos or multiple formats.
+3. **Reliability**: Redis buffers jobs, ensuring no data loss during peak loads.
+4. **Separation of Concerns**: Clear responsibilities for each component (upload, process, transcode, deliver).
 
 ---
 
