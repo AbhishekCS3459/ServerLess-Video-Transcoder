@@ -1,5 +1,5 @@
 
-# Serverless Distributed Video Transcoding System
+# Serverless Video Transcoding System
 
 This project implements a robust, distributed video transcoding system using **Node.js**, **AWS services**, **Redis**, and **ffmpeg**. By utilizing a leaky bucket rate-limiting algorithm, it efficiently converts uploaded videos into multiple resolutions, enhancing accessibility and offering optimized viewing experiences for users. The system supports automated transcoding for multiple video qualities and allows users to preview and download files in different resolutions.
 
