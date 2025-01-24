@@ -27,9 +27,6 @@ This project implements a robust, distributed video transcoding system using **N
 - **Redis**: Queue management for video transcoding tasks.
 - **AWS ECS & Docker**: Video transcoding containers running on ECS clusters.
 - **AWS Lambda & EventBridge**: Triggers video transcoding workflows when a video upload event occurs in S3.
-
-![System Architecture](https://github.com/AbhishekCS3459/Video-Transcoder-Service/assets/14cbd7d1-3a13-4f71-a768-37f2d6d380e9)
-
 ---
 
 ## 🛠️ Tech Stack
